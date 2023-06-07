@@ -84,6 +84,8 @@ require("lazy").setup({
     "rafamadriz/friendly-snippets",
     -- 基于LSP的代码检查 TODO
     "dense-analysis/ale",
+    -- 基于LSP的inlay hint
+    "lvimuser/lsp-inlayhints.nvim",
     
     -- 代码补全支持
     "hrsh7th/nvim-cmp",
@@ -244,6 +246,7 @@ require("mason-lspconfig").setup({
 local lspconfig = require("lspconfig")
 -- lua_ls
 lspconfig.lua_ls.setup({})
+-- clangd
 lspconfig.clangd.setup( {
     cmd = {
         "clangd",
@@ -252,10 +255,30 @@ lspconfig.clangd.setup( {
         "--header-insertion=never",
     },
 })
+-- bashls
 lspconfig.bashls.setup({})
+-- omnisharp
 lspconfig.omnisharp.setup({})
+-- grammarly
 lspconfig.grammarly.setup({})
+-- remark_ls
 lspconfig.remark_ls.setup({})
+
+-- 初始化inlay hint
+require("lsp-inlayhints").setup()
+vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
+vim.api.nvim_create_autocmd("LspAttach", {
+  group = "LspAttach_inlayhints",
+  callback = function(args)
+    if not (args.data and args.data.client_id) then
+      return
+    end
+
+    local bufnr = args.buf
+    local client = vim.lsp.get_client_by_id(args.data.client_id)
+    require("lsp-inlayhints").on_attach(client, bufnr)
+  end,
+})
 
 -- 初始化代码补全
 local has_words_before = function()
