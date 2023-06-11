@@ -146,6 +146,8 @@ require("lazy").setup({
     { "fatih/vim-go", build = ":GoUpdateBinaries" },
     -- Python支持
     "python-mode/python-mode",
+    -- OrgMode支持
+    'nvim-orgmode/orgmode',
 })
 
 
@@ -211,6 +213,11 @@ require('mini.indentscope').setup()
 vim.g["loaded_netrw"] = 1
 vim.g["loaded_netrwPlugin"] = 1
 require("nvim-tree").setup()
+
+
+-- 初始化OrgMode
+require('orgmode').setup_ts_grammar()
+require('orgmode').setup()
 
 
 -- 初始化Telescope
