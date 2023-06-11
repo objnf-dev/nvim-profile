@@ -140,6 +140,8 @@ require("lazy").setup({
     "plasticboy/vim-markdown",
     -- Markdown预览
     { "iamcco/markdown-preview.nvim", build = "cd app && yarn install" },
+    -- 无浏览器的Markdown预览
+    "ellisonleao/glow.nvim",
     -- Rust支持
     "rust-lang/rust.vim",
     -- Golang支持
@@ -218,6 +220,10 @@ require("nvim-tree").setup()
 -- 初始化OrgMode
 require('orgmode').setup_ts_grammar()
 require('orgmode').setup()
+
+
+-- 初始化无浏览器Markdown预览
+require("glow").setup()
 
 
 -- 初始化Telescope
