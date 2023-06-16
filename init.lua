@@ -103,6 +103,9 @@ require("lazy").setup({
     "hrsh7th/cmp-nvim-lsp",
     -- 基于LSP的代码段补全
     "saadparwaiz1/cmp_luasnip",
+    -- 基于GitHub Copilot的代码段补全
+    "zbirenbaum/copilot.lua",
+    "zbirenbaum/copilot-cmp",
     
     
     -- 搜索
@@ -149,7 +152,7 @@ require("lazy").setup({
     -- Python支持
     "python-mode/python-mode",
     -- OrgMode支持
-    'nvim-orgmode/orgmode',
+    "nvim-orgmode/orgmode",
 })
 
 
@@ -204,11 +207,11 @@ require("which-key").setup()
 require("noice").setup()
 
 -- 初始化文字对象强化
-require('mini.ai').setup()
+require("mini.ai").setup()
 
 
 -- 初始化文字范围
-require('mini.indentscope').setup()
+require("mini.indentscope").setup()
 
 
 -- 初始化文件树
@@ -218,8 +221,8 @@ require("nvim-tree").setup()
 
 
 -- 初始化OrgMode
-require('orgmode').setup_ts_grammar()
-require('orgmode').setup()
+require("orgmode").setup_ts_grammar()
+require("orgmode").setup()
 
 
 -- 初始化无浏览器Markdown预览
@@ -293,6 +296,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
+-- 初始化Copilot
+require("copilot").setup()
+require("copilot_cmp").setup()
+
 -- 初始化代码补全
 local has_words_before = function()
 	local line, col = unpack(vim.api.nvim_win_get_cursor(0))
@@ -309,9 +316,10 @@ cmp.setup({
     },
     -- 补全来源
     sources = {
-        { name = 'nvim_lsp' },
-        { name = 'luasnip' },
-        { name = 'orgmode' },
+        { name = "copilot" },
+        { name = "nvim_lsp" },
+        { name = "luasnip" },
+        { name = "orgmode" },
         { name = "buffer" },
         { name = "calc" },
         { name = "path" },
@@ -321,24 +329,24 @@ cmp.setup({
     -- 补全样式
     formatting = {
         format = require("lspkind").cmp_format {
-            mode = 'symbol_text',
-            preset = 'default',
+            mode = "symbol_text",
+            preset = "default",
             -- 来源显示
             menu = {
-                buffer = '[buf]',
-                nvim_lsp = '[lsp]',
-                luasnip = '[snip]',
-                calc = '[calc]',
-                path = '[path]',
-                look = '[look]',
-                emoji = '[emo]'
+                buffer = "[buf]",
+                nvim_lsp = "[lsp]",
+                luasnip = "[snip]",
+                calc = "[calc]",
+                path = "[path]",
+                look = "[look]",
+                emoji = "[emo]"
             },
         },
     },
     -- 键位映射
     mapping = cmp.mapping.preset.insert ({
         -- Wiki：Super-Tab Config
-        ['<Tab>'] = cmp.mapping(function(fallback)
+        ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
@@ -348,9 +356,9 @@ cmp.setup({
             else
                 fallback()
             end
-        end, { 'i', 's' }),
+        end, { "i", "s" }),
 
-        ['<S-Tab>'] = cmp.mapping(function(fallback)
+        ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -358,10 +366,10 @@ cmp.setup({
             else
                 fallback()
             end
-        end, { 'i', 's' }),
-        ['<C-Up>'] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
-        ['<C-Down>'] = cmp.mapping(cmp.mapping.scroll_docs(4)),
-        ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        end, { "i", "s" }),
+        ["<C-Up>"] = cmp.mapping(cmp.mapping.scroll_docs(-4)),
+        ["<C-Down>"] = cmp.mapping(cmp.mapping.scroll_docs(4)),
+        ["<CR>"] = cmp.mapping.confirm({ select = true }),
     }),
     experimental = {
         -- 新版菜单
