@@ -153,6 +153,10 @@ require("lazy").setup({
     "python-mode/python-mode",
     -- OrgMode支持
     "nvim-orgmode/orgmode",
+    -- Git支持
+    "kdheepak/lazygit.nvim",
+    -- 幻灯片支持
+    "Chaitanyabsprip/present.nvim",
 })
 
 
@@ -227,6 +231,10 @@ require("orgmode").setup()
 
 -- 初始化无浏览器Markdown预览
 require("glow").setup()
+
+
+-- 初始化幻灯片支持
+require('present').setup()
 
 
 -- 初始化Telescope
