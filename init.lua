@@ -65,6 +65,8 @@ require("lazy").setup({
     "junegunn/goyo.vim",
     -- 代码观感强化
     { "nvim-treesitter/nvim-treesitter", build = ":TSUpdate" },
+    -- 图标
+    "nvim-tree/nvim-web-devicons",
     -- 文件树
     "nvim-tree/nvim-tree.lua",
     "nvim-tree/nvim-web-devicons",
@@ -86,6 +88,8 @@ require("lazy").setup({
     "dense-analysis/ale",
     -- 基于LSP的inlay hint
     "lvimuser/lsp-inlayhints.nvim",
+    -- LSP观感强化
+    "nvimdev/lspsaga.nvim",
     
     -- 代码补全支持
     "hrsh7th/nvim-cmp",
@@ -107,6 +111,10 @@ require("lazy").setup({
     "zbirenbaum/copilot.lua",
     "zbirenbaum/copilot-cmp",
     
+    -- 文档与Debug
+    "folke/neodev.nvim",
+    "mfussenegger/nvim-dap",
+    "rcarriga/nvim-dap-ui",
     
     -- 搜索
     "nvim-lua/plenary.nvim",
@@ -149,8 +157,6 @@ require("lazy").setup({
     "rust-lang/rust.vim",
     -- Golang支持
     { "fatih/vim-go", build = ":GoUpdateBinaries" },
-    -- Python支持
-    "python-mode/python-mode",
     -- OrgMode支持
     "nvim-orgmode/orgmode",
     -- Git支持
@@ -196,49 +202,49 @@ vim.g["airline#extensions#tabline#enabled"] = true
 
 
 -- 初始化剪贴板管理工具
-require("registers").setup()
+require("registers").setup({})
 
 
 -- 初始化终端工具
-require("toggleterm").setup()
+require("toggleterm").setup({})
 
 
 -- 初始化快捷键提示
-require("which-key").setup()
+require("which-key").setup({})
 
 
 -- 初始化通知
-require("noice").setup()
+require("noice").setup({})
 
 -- 初始化文字对象强化
-require("mini.ai").setup()
+require("mini.ai").setup({})
 
 
 -- 初始化文字范围
-require("mini.indentscope").setup()
+require("mini.indentscope").setup({})
 
 
 -- 初始化文件树
 vim.g["loaded_netrw"] = 1
 vim.g["loaded_netrwPlugin"] = 1
-require("nvim-tree").setup()
+require("nvim-tree").setup({})
 
 
 -- 初始化OrgMode
 require("orgmode").setup_ts_grammar()
-require("orgmode").setup()
+require("orgmode").setup({})
 
 
 -- 初始化无浏览器Markdown预览
-require("glow").setup()
+require("glow").setup({})
 
 
 -- 初始化幻灯片支持
-require('present').setup()
+require('present').setup({})
 
 
 -- 初始化Telescope
-require("telescope").setup()
+require("telescope").setup({})
 require("telescope").load_extension("vimspector")
 require("telescope").load_extension("heading")
 require("telescope").load_extension("file_browser")
@@ -256,20 +262,29 @@ vim.g["cpp_concepts_highlight"] = true
 
 
 -- 初始化LSP支持
-require("mason").setup()
+require("mason").setup({})
 require("mason-lspconfig").setup({
     ensure_installed = {
-        "clangd",
-        "lua_ls",
-        "bashls",
-        "omnisharp",
-        "grammarly",
-        "remark_ls",
+        "clangd", -- C++
+        "cmake", -- CMake
+        "rust_analyzer", -- Rust
+        "lua_ls", -- Lua
+        "bashls", -- Bash
+        "powershell_es", -- PowerShell
+        "tsserver", -- TypeScript
+        "yamlls", -- YAML
+        "dockerls", -- Docker
+        -- "nil_ls", -- Nix
+        "sqlls", -- SQL
+        "texlab", --LaTeX
+        "jedi_language_server", -- Python
+        "golangci_lint_ls", -- Go
+        "grammarly", -- English Spell Checker
+        "remark_ls", -- Markdown
     }
 })
 local lspconfig = require("lspconfig")
--- lua_ls
-lspconfig.lua_ls.setup({})
+-- lua_ls在nodev处初始化
 -- clangd
 lspconfig.clangd.setup( {
     cmd = {
@@ -281,15 +296,33 @@ lspconfig.clangd.setup( {
 })
 -- bashls
 lspconfig.bashls.setup({})
--- omnisharp
-lspconfig.omnisharp.setup({})
 -- grammarly
 lspconfig.grammarly.setup({})
 -- remark_ls
 lspconfig.remark_ls.setup({})
+-- cmake
+lspconfig.cmake.setup({})
+-- rust_analyzer
+lspconfig.rust_analyzer.setup({})
+-- powershell_es
+lspconfig.powershell_es.setup({})
+-- tsserver
+lspconfig.tsserver.setup({})
+-- yamlls
+lspconfig.yamlls.setup({})
+-- dockerls
+lspconfig.dockerls.setup({})
+-- sqlls
+lspconfig.sqlls.setup({})
+-- texlab
+lspconfig.texlab.setup({})
+-- jedi_language_server
+lspconfig.jedi_language_server.setup({})
+-- golangci_lint_ls
+lspconfig.golangci_lint_ls.setup({})
 
 -- 初始化inlay hint
-require("lsp-inlayhints").setup()
+require("lsp-inlayhints").setup({})
 vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
 vim.api.nvim_create_autocmd("LspAttach", {
   group = "LspAttach_inlayhints",
@@ -305,8 +338,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 })
 
 -- 初始化Copilot
-require("copilot").setup()
-require("copilot_cmp").setup()
+require("copilot").setup({})
+require("copilot_cmp").setup({})
 
 -- 初始化代码补全
 local has_words_before = function()
@@ -398,6 +431,24 @@ cmp.setup.cmdline(":", {
             { name = "path" }
     },
 })
+
+-- 初始化lspsaga
+require('lspsaga').setup({})
+
+-- 初始化nodev
+require("neodev").setup({})
+lspconfig.lua_ls.setup({
+  settings = {
+    Lua = {
+      completion = {
+        callSnippet = "Replace"
+      }
+    }
+  }
+})
+
+-- 初始化nvim-dap-ui
+require("dapui").setup({})
 
 
 -- 键位绑定，<leader>默认是"\"
