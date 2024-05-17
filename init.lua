@@ -231,7 +231,6 @@ require("nvim-tree").setup({})
 
 
 -- 初始化OrgMode
-require("orgmode").setup_ts_grammar()
 require("orgmode").setup({})
 
 
@@ -446,9 +445,6 @@ lspconfig.lua_ls.setup({
     }
   }
 })
-
--- 初始化nvim-dap-ui
-require("dapui").setup({})
 
 
 -- 键位绑定，<leader>默认是"\"
